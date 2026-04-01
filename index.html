@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>URGENT: Reward Claim Pending</title>
+  <style>
+    :root {
+      --bg-dark: #05070a;
+      --matrix-green: #00ff41;
+      --hacker-red: #ff3e3e;
+      --accent-blue: #00e5ff;
+      --card-bg: rgba(10, 15, 25, 0.9);
+      --text: #e0e0e0;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      font-family: 'Segoe UI', 'Courier New', monospace;
+      background-color: var(--bg-dark);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      overflow-x: hidden;
+      transition: filter 0.1s;
+    }
+
+    /* Glitch Animation */
+    .glitch-mode {
+      animation: shake 0.2s infinite;
+      filter: invert(1) hue-rotate(180deg) contrast(200%);
+    }
+
+    @keyframes shake {
+      0% { transform: translate(3px, 3px); }
+      25% { transform: translate(-3px, -3px); }
+      50% { transform: translate(-3px, 3px); }
+      75% { transform: translate(3px, -3px); }
+      100% { transform: translate(0); }
+    }
+
+    .container {
+      width: min(800px, 100%);
+      background: var(--card-bg);
+      border: 2px solid #333;
+      border-radius: 12px;
+      padding: 30px;
+      position: relative;
+      box-shadow: 0 0 50px rgba(0, 229, 255, 0.2);
+      backdrop-filter: blur(10px);
+    }
+
+    h1 {
+      color: var(--accent-blue);
+      text-align: center;
+      margin-bottom: 10px;
+      font-size: 1.8rem;
+    }
+
+    .status-bar {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 12px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+      border-left: 4px solid var(--matrix-green);
+      font-size: 0.9rem;
+      font-family: monospace;
+    }
+
+    /* Terminal Window */
+    #terminal {
+      background: #000;
+      height: 200px;
+      padding: 15px;
+      border-radius: 8px;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.85rem;
+      color: var(--matrix-green);
+      overflow-y: auto;
+      border: 1px solid #444;
+      margin-bottom: 20px;
+      line-height: 1.5;
+      display: none; /* Shown after click */
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 8px;
+      height: 15px;
+      background: var(--matrix-green);
+      animation: blink 0.8s infinite;
+    }
+
+    @keyframes blink { 50% { opacity: 0; } }
+
+    .btn {
+      width: 100%;
+      padding: 18px;
+      background: linear-gradient(90deg, #00c6ff, #0072ff);
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-weight: bold;
+      font-size: 1.1rem;
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: 0.3s;
+      box-shadow: 0 4px 15px rgba(0, 114, 255, 0.4);
+    }
+
+    .btn:hover { transform: translateY(-2px); filter: brightness(1.2); }
+    .btn:active { transform: translateY(0); }
+
+    #otpSection, #progressWrap, #resultSection { display: none; margin-top: 20px; }
+
+    .otp-input {
+      width: 100%;
+      padding: 15px;
+      background: #111;
+      border: 1px solid var(--accent-blue);
+      color: var(--matrix-green);
+      text-align: center;
+      font-size: 1.8rem;
+      letter-spacing: 8px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      outline: none;
+    }
+
+    .progress-bar {
+      height: 14px;
+      background: #222;
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 15px 0;
+      border: 1px solid #444;
+    }
+
+    .progress-fill {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--matrix-green), #80ffaa);
+      transition: width 0.2s;
+    }
+
+    .roast-text {
+      text-align: center;
+      padding: 20px;
+    }
+
+    canvas { pointer-events: none; position: fixed; inset: 0; z-index: 100; }
+  </style>
+</head>
+<body>
+
+  <audio id="prankSound">
+    <source src="plan.mp3" type="audio/mpeg">
+  </audio>
+
+  <canvas id="confetti"></canvas>
+
+  <div class="container" id="mainCard">
+    <div style="text-align:center; margin-bottom: 15px;">
+      <span style="background: var(--hacker-red); color: white; padding: 4px 12px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; letter-spacing: 1px;">Live Location Tracking is Active</span>
+    </div>
+    
+    <h1>🎉 Exclusive Reward Locked</h1>
+    <p style="text-align:center; color: #888; margin-bottom: 20px;">Ticket ID: <strong>#WIN-772-IPH</strong></p>
+
+    <div class="status-bar" id="deviceDisplay">
+      Analyzing Connection...
+    </div>
+
+    <div id="terminal">
+      <div id="terminal-content"></div><span class="cursor"></span>
+    </div>
+
+    <button class="btn" id="claimBtn">Claim iPhone 17 Pro Now</button>
+
+    <div id="otpSection">
+      <p style="margin-bottom:12px; text-align:center; color: var(--accent-blue);">Enter The PassKey to Proceed to delivery</p>
+      <input type="text" class="otp-input" id="otpInput" maxlength="6" placeholder="000000" inputmode="numeric">
+      <button class="btn" id="verifyBtn">Verify & Dispatch</button>
+    </div>
+
+    <div id="progressWrap">
+      <p id="statusLabel" style="text-align: center; font-size: 0.9rem;">Syncing security tokens...</p>
+      <div class="progress-bar"><div class="progress-fill" id="progressBar"></div></div>
+    </div>
+
+    <div id="resultSection" class="roast-text"></div>
+  </div>
+
+  <script>
+    const claimBtn = document.getElementById('claimBtn');
+    const terminal = document.getElementById('terminal');
+    const terminalContent = document.getElementById('terminal-content');
+    const deviceDisplay = document.getElementById('deviceDisplay');
+    const otpSection = document.getElementById('otpSection');
+    const progressWrap = document.getElementById('progressWrap');
+    const resultSection = document.getElementById('resultSection');
+    const progressBar = document.getElementById('progressBar');
+    const prankSound = document.getElementById('prankSound');
+
+    // 1. Generate Fake Details
+    const fakeIP = `${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*10)}.${Math.floor(Math.random()*255)}`;
+    deviceDisplay.innerHTML = `<strong>TARGET_IP:</strong> ${fakeIP} <br> <strong>LOCATION:</strong> Chindepalle, AP (Approx)`;
+
+    const logs = [
+      `> [SYS] Handshake established with ${fakeIP}`,
+      `> [WARN] Bypassing Android/iOS sandbox... OK`,
+      `> [CMD] sudo rm -rf /kernel/secure_vault`,
+      `> [INFO] Accessing front_camera_driver... SUCCESS`,
+      `> [INFO] Capturing facial biometric data...`,
+      `> [DATA] 4.2GB of private photos indexed.`,
+      `> [SYSTEM] Payload delivered. Awaiting confirmation.`
+    ];
+
+    function typeLog(index) {
+      if (index < logs.length) {
+        const line = document.createElement('div');
+        line.style.marginBottom = '5px';
+        line.textContent = logs[index];
+        terminalContent.appendChild(line);
+        terminal.scrollTop = terminal.scrollHeight;
+        setTimeout(() => typeLog(index + 1), 500);
+      } else {
+        setTimeout(() => {
+          otpSection.style.display = 'block';
+        }, 800);
+      }
+    }
+
+    // 2. Claim Action
+    claimBtn.addEventListener('click', () => {
+      // Trigger Audio load (bypass autoplay block)
+      prankSound.load();
+
+      // Fake Permission Scare
+      const confirmCapture = confirm("[SECURE PORTAL]\nThis device requires temporary access to your camera and microphone to verify your identity for the prize.\n\nAllow access?");
+      
+      if (confirmCapture) {
+        // Visual Glitch
+        document.body.classList.add('glitch-mode');
+        setTimeout(() => document.body.classList.remove('glitch-mode'), 1500);
+
+        claimBtn.style.display = 'none';
+        terminal.style.display = 'block';
+        typeLog(0);
+      }
+    });
+
+    // 3. Final Reveal
+    document.getElementById('verifyBtn').addEventListener('click', () => {
+      const otpVal = document.getElementById('otpInput').value;
+      if (otpVal.length < 4) return alert("Error: Invalid Security Key.");
+
+      otpSection.style.display = 'none';
+      progressWrap.style.display = 'block';
+
+      let p = 0;
+      const interval = setInterval(() => {
+        p += 2;
+        progressBar.style.width = p + '%';
+        if (p==10) document.getElementById
+          ('statusLabel').innerText =
+          "Sending Data to MarkZukenberg for Confirmation"
+        
+        if (p === 50) document.getElementById('statusLabel').innerText = "Downloading browser history... 📂";
+        if (p === 80) document.getElementById('statusLabel').innerText = "Sending photos to your contacts... 🤳";
+        if (p === 100) document.getElementById('statusLabel').innerText = "Emptying bank account... 💸";
+
+        if (p > 100) {
+          clearInterval(interval);
+          
+          // PLAY AUDIO
+          prankSound.play().catch(e => console.log("Audio failed to play. Check file path."));
+
+          progressWrap.style.display = 'none';
+          terminal.style.display = 'none';
+          
+          resultSection.innerHTML = `
+            <div style="font-size: 6rem; margin-bottom: 10px;">🤡</div>
+            <h2 style="color: #ff3e3e; font-size: 2.5rem; margin-bottom: 15px;">APRIL FOOL!</h2>
+            <p style="color: #fff; font-size: 1.2rem; line-height: 1.6;">
+              Bro, your IP is 131.31.1.113, but your brain is still in 2010 if you thought this was a real iPhone giveaway.🤣<br><br>
+              <span style="color: var(--matrix-green); font-family: monospace;">No Data was actually Stolen. You just got pranked by Hari Charan 😝</span>
+            </p>
+          `;
+          resultSection.style.display = 'block';
+          startConfetti();
+        }
+      }, 100);
+    });
+
+    // Confetti Engine
+    function startConfetti() {
+      const canvas = document.getElementById('confetti');
+      const ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      let pieces = [];
+      for (let i = 0; i < 150; i++) pieces.push({
+        x: Math.random() * canvas.width, 
+        y: Math.random() * canvas.height - canvas.height, 
+        s: Math.random() * 8 + 2, 
+        c: ['#ff4ecb', '#00e5ff', '#ffd54f', '#ffffff'][Math.floor(Math.random()*4)],
+        v: Math.random() * 3 + 2
+      });
+      function update() {
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        pieces.forEach(p => {
+          p.y += p.v; if(p.y > canvas.height) p.y = -10;
+          ctx.fillStyle = p.c; ctx.fillRect(p.x, p.y, p.s, p.s);
+        });
+        requestAnimationFrame(update);
+      }
+      update();
+    }
+  </script>
+</body>
+</html>
